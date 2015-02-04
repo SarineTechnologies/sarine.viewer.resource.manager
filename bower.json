@@ -1,0 +1,16 @@
+{
+  "name": "sarine.viewer.resource.manager",
+  "version": "0.0.1",
+  "main": "dist/sarine.viewer.resource.manager.js",
+  "ignore": [
+    ".git",
+    "node_modules",
+    "package.json",
+    "Gruntfile.js"
+  ],
+  "exportsOverride": {
+        "sarine.*": {        
+          "coffee": "**/*.coffee"
+        }
+    }
+}
