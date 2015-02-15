@@ -1,1 +1,1 @@
-commit.cmd && grunt --gruntfile GruntfileBundle.js bundle && grunt release-git
+ grunt --gruntfile GruntfileBundle.js bundle && commit.cmd && grunt release-git
