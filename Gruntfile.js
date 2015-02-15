@@ -74,5 +74,4 @@ module.exports = function(grunt) {
         }
     })
     grunt.registerTask('commit', ['prompt', 'gitadd', 'gitcommit:all', 'gitpush']);
-    grunt.registerTask('release-git', [ 'gitcommit:bower', 'release']);
 };

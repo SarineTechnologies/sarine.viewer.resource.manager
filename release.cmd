@@ -1,1 +1,1 @@
- grunt version:project:patch && grunt --gruntfile GruntfileBundle.js bundle && commit.cmd && grunt release-git
+ grunt version:project:patch && grunt --gruntfile GruntfileBundle.js bundle && commit.cmd && grunt release
