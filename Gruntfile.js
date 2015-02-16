@@ -74,4 +74,5 @@ module.exports = function(grunt) {
         }
     })
     grunt.registerTask('commit', ['prompt', 'gitadd', 'gitcommit:all', 'gitpush']);
+    grunt.registerTask('release-git', ['release:' + grunt.file.readJSON("bower.json")["version"]]);
 };
