@@ -1,6 +1,6 @@
 
 /*!
-sarine.viewer.resource.manager - v0.0.5 -  Sunday, February 15th, 2015, 4:22:15 PM 
+sarine.viewer.resource.manager - v0.0.6 -  Monday, February 16th, 2015, 3:30:15 PM 
  The source code, name, and look and feel of the software are Copyright © 2015 Sarine Technologies Ltd. All Rights Reserved. You may not duplicate, copy, reuse, sell or otherwise exploit any portion of the code, content or visual design elements without express written permission from Sarine Technologies Ltd. The terms and conditions of the sarine.com website (http://sarine.com/terms-and-conditions/) apply to the access and use of this software.
  */
 
@@ -17,7 +17,7 @@ sarine.viewer.resource.manager - v0.0.5 -  Sunday, February 15th, 2015, 4:22:15 
     _imageManger = void 0;
 
     function ResourceManager() {
-      console.log('new singleton122211');
+      console.log('new singleton');
       _timeoutManager = new TimeoutManager();
       _imageManger = new ImageManger();
     }
@@ -32,16 +32,17 @@ sarine.viewer.resource.manager - v0.0.5 -  Sunday, February 15th, 2015, 4:22:15 
     ImageManger = (function() {
       function ImageManger() {}
 
-      ImageManger.prototype.imageObj = {};
+      ImageManger.prototype.viewerImagesObj = {};
 
       ImageManger.prototype.loadImage = function(src, viewer) {
         var defer, img, _t;
         _t = this;
-        if (this.imageObj[viewer.id] === void 0) {
-          this.imageObj[viewer.id] = {
-            capacity: viewer.downloadLimit || 2,
+        if (this.viewerImagesObj[viewer.id] === void 0) {
+          this.viewerImagesObj[viewer.id] = {
+            capacity: viewer.downloadLimit || 1000,
             bag: [],
-            threshhold: []
+            threshhold: [],
+            order: parseInt(viewer.element.data("order"))
           };
         }
         defer = $.Deferred();
@@ -49,29 +50,29 @@ sarine.viewer.resource.manager - v0.0.5 -  Sunday, February 15th, 2015, 4:22:15 
         img.crossOrigin = "Anonymous";
         img.onload = function(e) {
           var index, obj, popped;
-          index = $.inArray(_t.imageObj[viewer.id].threshhold.filter((function(_this) {
+          index = $.inArray(_t.viewerImagesObj[viewer.id].threshhold.filter((function(_this) {
             return function(v) {
               return v.src === e.target.src;
             };
-          })(this))[0], _t.imageObj[viewer.id].threshhold);
-          obj = _t.imageObj[viewer.id].threshhold[index];
-          popped = _t.imageObj[viewer.id].bag.shift();
+          })(this))[0], _t.viewerImagesObj[viewer.id].threshhold);
+          obj = _t.viewerImagesObj[viewer.id].threshhold[index];
+          popped = _t.viewerImagesObj[viewer.id].bag.shift();
           if (popped) {
             popped.img.src = popped.src;
-            _t.imageObj[viewer.id].threshhold.push(popped);
+            _t.viewerImagesObj[viewer.id].threshhold.push(popped);
           }
-          _t.imageObj[viewer.id].threshhold.splice(index, 1);
+          _t.viewerImagesObj[viewer.id].threshhold.splice(index, 1);
           return obj.defer.resolve(e.target);
         };
-        if (this.imageObj[viewer.id].threshhold.length < this.imageObj[viewer.id].capacity) {
-          this.imageObj[viewer.id].threshhold.push({
+        if (this.viewerImagesObj[viewer.id].threshhold.length < this.viewerImagesObj[viewer.id].capacity) {
+          this.viewerImagesObj[viewer.id].threshhold.push({
             defer: defer,
             src: src,
             img: img
           });
           img.src = src;
         } else {
-          this.imageObj[viewer.id].bag.push({
+          this.viewerImagesObj[viewer.id].bag.push({
             defer: defer,
             src: src,
             img: img
