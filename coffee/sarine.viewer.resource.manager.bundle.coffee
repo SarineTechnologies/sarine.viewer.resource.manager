@@ -1,5 +1,5 @@
 ###!
-sarine.viewer.resource.manager - v0.0.8 -  Monday, February 16th, 2015, 3:39:08 PM 
+sarine.viewer.resource.manager - v0.0.8 -  Monday, February 23rd, 2015, 1:06:02 PM 
  The source code, name, and look and feel of the software are Copyright © 2015 Sarine Technologies Ltd. All Rights Reserved. You may not duplicate, copy, reuse, sell or otherwise exploit any portion of the code, content or visual design elements without express written permission from Sarine Technologies Ltd. The terms and conditions of the sarine.com website (http://sarine.com/terms-and-conditions/) apply to the access and use of this software.
 ###
 
@@ -23,7 +23,7 @@ class ResourceManager
 		constructor: () ->
 			
 		viewerImagesObj : {}
-		loadImage : (src,viewer) ->
+		loadImage : (src,viewer,defer) -> 
 			_t = @
 			if @viewerImagesObj[viewer.id] == undefined
 				@viewerImagesObj[viewer.id] = {				
@@ -32,7 +32,7 @@ class ResourceManager
 					threshhold:[],
 					order : parseInt viewer.element.data("order")
 				}
-			defer = $.Deferred()
+			defer = defer || $.Deferred()
 			img = new Image()
 			img.crossOrigin = "Anonymous"
 			img.onload = (e) ->
@@ -51,8 +51,14 @@ class ResourceManager
 			else
 				@viewerImagesObj[viewer.id].bag.push  { defer:defer, src:src , img:img}
 				
-						
-			
+			img.onerror = (e) ->				  
+				index = $.inArray(_t.viewerImagesObj[viewer.id].threshhold.filter((v)=> return v.src == e.target.src )[0],_t.viewerImagesObj[viewer.id].threshhold)
+				obj = _t.viewerImagesObj[viewer.id].threshhold[index]
+				if(e.target.src != viewer.callbackPic)
+					_t.loadImage(viewer.callbackPic,viewer,defer)			
+				else
+					throw new Error('callbackPic not exist')
+				
 				
 			# if the copacity is reach the bind to the defer.then(function) of the current downloading image
 			defer

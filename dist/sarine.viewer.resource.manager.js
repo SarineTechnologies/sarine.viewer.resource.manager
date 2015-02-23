@@ -1,6 +1,6 @@
 
 /*!
-sarine.viewer.resource.manager - v0.0.8 -  Monday, February 16th, 2015, 3:39:09 PM 
+sarine.viewer.resource.manager - v0.0.8 -  Monday, February 23rd, 2015, 1:06:02 PM 
  The source code, name, and look and feel of the software are Copyright © 2015 Sarine Technologies Ltd. All Rights Reserved. You may not duplicate, copy, reuse, sell or otherwise exploit any portion of the code, content or visual design elements without express written permission from Sarine Technologies Ltd. The terms and conditions of the sarine.com website (http://sarine.com/terms-and-conditions/) apply to the access and use of this software.
  */
 
@@ -34,8 +34,8 @@ sarine.viewer.resource.manager - v0.0.8 -  Monday, February 16th, 2015, 3:39:09 
 
       ImageManger.prototype.viewerImagesObj = {};
 
-      ImageManger.prototype.loadImage = function(src, viewer) {
-        var defer, img, _t;
+      ImageManger.prototype.loadImage = function(src, viewer, defer) {
+        var img, _t;
         _t = this;
         if (this.viewerImagesObj[viewer.id] === void 0) {
           this.viewerImagesObj[viewer.id] = {
@@ -45,7 +45,7 @@ sarine.viewer.resource.manager - v0.0.8 -  Monday, February 16th, 2015, 3:39:09 
             order: parseInt(viewer.element.data("order"))
           };
         }
-        defer = $.Deferred();
+        defer = defer || $.Deferred();
         img = new Image();
         img.crossOrigin = "Anonymous";
         img.onload = function(e) {
@@ -78,6 +78,20 @@ sarine.viewer.resource.manager - v0.0.8 -  Monday, February 16th, 2015, 3:39:09 
             img: img
           });
         }
+        img.onerror = function(e) {
+          var index, obj;
+          index = $.inArray(_t.viewerImagesObj[viewer.id].threshhold.filter((function(_this) {
+            return function(v) {
+              return v.src === e.target.src;
+            };
+          })(this))[0], _t.viewerImagesObj[viewer.id].threshhold);
+          obj = _t.viewerImagesObj[viewer.id].threshhold[index];
+          if (e.target.src !== viewer.callbackPic) {
+            return _t.loadImage(viewer.callbackPic, viewer, defer);
+          } else {
+            throw new Error('callbackPic not exist');
+          }
+        };
         return defer;
       };
 
