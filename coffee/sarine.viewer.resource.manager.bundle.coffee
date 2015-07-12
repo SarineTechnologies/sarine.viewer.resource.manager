@@ -1,5 +1,5 @@
 ###!
-sarine.viewer.resource.manager - v0.1.0 -  Monday, April 6th, 2015, 7:06:58 PM 
+sarine.viewer.resource.manager - v0.3.0 -  Thursday, July 9th, 2015, 1:47:57 PM 
  The source code, name, and look and feel of the software are Copyright © 2015 Sarine Technologies Ltd. All Rights Reserved. You may not duplicate, copy, reuse, sell or otherwise exploit any portion of the code, content or visual design elements without express written permission from Sarine Technologies Ltd. The terms and conditions of the sarine.com website (http://sarine.com/terms-and-conditions/) apply to the access and use of this software.
 ###
 
@@ -36,7 +36,7 @@ class ResourceManager
 			img = new Image()
 			img.crossOrigin = "Anonymous"
 			img.onload = (e) ->
-				index = $.inArray(_t.viewerImagesObj[viewer.id].threshhold.filter((v)=> return v.src == e.target.src )[0],_t.viewerImagesObj[viewer.id].threshhold)
+				index = $.inArray(_t.viewerImagesObj[viewer.id].threshhold.filter((v)=> return v.src.toLowerCase() == e.target.src.toLowerCase() )[0],_t.viewerImagesObj[viewer.id].threshhold)
 				obj = _t.viewerImagesObj[viewer.id].threshhold[index]
 				popped = _t.viewerImagesObj[viewer.id].bag.shift()
 				if popped
@@ -52,9 +52,9 @@ class ResourceManager
 				@viewerImagesObj[viewer.id].bag.push  { defer:defer, src:src , img:img}
 				
 			img.onerror = (e) ->				  
-				index = $.inArray(_t.viewerImagesObj[viewer.id].threshhold.filter((v)=> return v.src == e.target.src )[0],_t.viewerImagesObj[viewer.id].threshhold)
+				index = $.inArray(_t.viewerImagesObj[viewer.id].threshhold.filter((v)=> return v.src.toLowerCase() == e.target.src.toLowerCase() )[0],_t.viewerImagesObj[viewer.id].threshhold)
 				obj = _t.viewerImagesObj[viewer.id].threshhold[index]
-				if(e.target.src != viewer.callbackPic)
+				if(e.target.src.toLowerCase() != viewer.callbackPic.toLowerCase())
 					_t.loadImage(viewer.callbackPic,viewer,defer)			
 				else
 					throw new Error('callbackPic not exist')
