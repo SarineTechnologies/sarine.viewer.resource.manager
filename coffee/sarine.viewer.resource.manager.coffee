@@ -34,7 +34,12 @@ class ResourceManager
 				}
 			defer = defer || $.Deferred()
 			img = new Image()
-			img.crossOrigin = "Anonymous"
+
+			if src.indexOf('data:image') == -1
+				img.crossOrigin = "Anonymous"
+			else
+				img.crossOrigin = null
+
 			img.onload = (e) ->
 				index = $.inArray(_t.viewerImagesObj[viewer.id].threshhold.filter((v)=> return v.src.toLowerCase() == e.target.src.toLowerCase() )[0],_t.viewerImagesObj[viewer.id].threshhold)
 				obj = _t.viewerImagesObj[viewer.id].threshhold[index]
