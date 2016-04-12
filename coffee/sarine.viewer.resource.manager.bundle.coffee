@@ -1,5 +1,5 @@
 ###!
-sarine.viewer.resource.manager - v0.8.0 -  Tuesday, April 12th, 2016, 4:34:53 PM 
+sarine.viewer.resource.manager - v0.8.0 -  Tuesday, April 12th, 2016, 4:38:26 PM 
  The source code, name, and look and feel of the software are Copyright © 2015 Sarine Technologies Ltd. All Rights Reserved. You may not duplicate, copy, reuse, sell or otherwise exploit any portion of the code, content or visual design elements without express written permission from Sarine Technologies Ltd. The terms and conditions of the sarine.com website (http://sarine.com/terms-and-conditions/) apply to the access and use of this software.
 ###
 
@@ -35,7 +35,12 @@ class ResourceManager
 				}
 			defer = defer || $.Deferred()
 			img = new Image()
-			img.crossOrigin = "Anonymous"
+
+			if src.indexOf('data:image') == -1
+				img.crossOrigin = "Anonymous"
+			else
+				img.crossOrigin = null
+
 			img.onload = (e) ->
 				index = $.inArray(_t.viewerImagesObj[viewer.id].threshhold.filter((v)=> return v.src.toLowerCase() == e.target.src.toLowerCase() )[0],_t.viewerImagesObj[viewer.id].threshhold)
 				obj = _t.viewerImagesObj[viewer.id].threshhold[index]
